@@ -103,7 +103,7 @@ class FtpServer
                         tmpServer = nil
 
                     tmpServer = new TcpServer()
-                    tmpPort: unsigned int = rand()%55535+10000
+                    tmpPort: uint = rand()%55535+10000
                     while tmpServer->bindAndListen(tmpPort) < 0
                         tmpPort = rand()%55535+10000
                     
@@ -141,7 +141,7 @@ class FtpServer
 
                 when cmd_args[0] == "RETR"
                     file_name := cmd_args[1].c_str()
-                    file_size: unsigned long = -1
+                    file_size: uint32 = -1
                     statinfo: struct stat
                     if stat(file_name,&statinfo) < 0
                         ctrlSock.sendString("550 File not exist\r\n")
@@ -149,7 +149,7 @@ class FtpServer
 
                     file_size = statinfo.st_size
                     if passive
-                        sprintf(cmd_buf,"150 Opening BINARY mode data connection for %s (%ld bytes).\r\n",file_name,file_size)
+                        sprintf(cmd_buf,"150 Opening BINARY mode data connection for %s (%u bytes).\r\n",file_name,file_size)
                         ctrlSock.sendString(cmd_buf)
 
                         tmpSocket := tmpServer->getOneConn();

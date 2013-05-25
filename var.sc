@@ -12,6 +12,7 @@ import "sys/stat.h"
        "string"
        "cstdlib"
        "cstdio"
+       "cstdint"
        "map"
 
 using namespace std

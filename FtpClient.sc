@@ -101,8 +101,7 @@ class FtpClient
         loop
             printf("FTP> ")
             line: string
-            if not getline(cin, line)
-                break
+            if not getline(cin, line) then break
             parse(line)
 
             res_code: int
@@ -122,8 +121,7 @@ class FtpClient
                     loop
                         res = tmpSocket.readLine(&res_code);
                         printf("%s", res.c_str())
-                        if res_code < 0
-                            break
+                        if res_code < 0 then break
 
                     res = readResponse(&res_code)
                     printf("\n%s", res.c_str())
@@ -169,8 +167,7 @@ class FtpClient
                             printf("Receive %d bytes\n",total_size)
                         else
                             printf("Can't open file %s for writing!\n",file_name)
-
-                        res = readResponse(&res_code);
+                        res = readResponse(&res_code)
                         printf("%s", res.c_str())
                     tmpSocket.close()
 

@@ -1,4 +1,4 @@
-SugarCpp = ./Compiler/SugarCpp.CommandLine.exe
+SugarCpp = SugarCpp
 CC = clang++
 CFLAGS= -std=c++11 -Wall -c
 
