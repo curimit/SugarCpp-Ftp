@@ -44,8 +44,7 @@ bool startsWith(s: string&, pat: const char*)
 
     return true
 
-int toInt(s: const string&)
-    return atoi(s.c_str())
+int toInt(s: const string&) = atoi(s.c_str())
 
 string execShellCmd(cmd: const char*, res_code: int*)
     buf: char[BUF_SIZE]

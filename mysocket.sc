@@ -20,19 +20,18 @@ class TcpSocket
         @servaddr.sin_family = AF_INET
         @servaddr.sin_port = htons(port)
         @servaddr.sin_addr.s_addr = inet_addr(ip)
-        if connect(sockfd, &(@servaddr) as (sockaddr*), sizeof(@servaddr)) == -1
+        if connect(sockfd, (sockaddr*)&@servaddr, sizeof(@servaddr)) == -1
             perror("can't connect to server!\n")
             return -1
         return 0
 
-    int send(buf: const void*, len: int)
-        return global::send(sockfd, buf, len, 0)
+    int send(buf: const void*, len: int) = global::send(sockfd, buf, len, 0)
 
-    int recv(buf: void*, len: int)
-        return global::recv(sockfd, buf, len, 0)
+    int recv(buf: void*, len: int) = global::recv(sockfd, buf, len, 0)
 
-    int sendString(str: const char*)
-        return send(str,strlen(str))
+    int sendString(str: const char*) = send(str,strlen(str))
+
+    int close() = global::close(sockfd)
 
     string readLine(res_code: int*)
         res: string
@@ -43,24 +42,18 @@ class TcpSocket
             len := recv(buf,BUF_SIZE)
             if len > 0
                 res += string(buf)
-                //cout<<"part:"<<res<<endl;
                 if strstr(buf,"\r\n")?
-                    *res_code=0;
-                    //printf("Response:%s\n",res.c_str());
+                    *res_code=0
                     return res
             else
                 *res_code = -1
                 return res
-    int close()
-
-        return global::close(sockfd);
     
     int sendFile(file_name: const char*)
         buf: char[READ_BUF_SIZE]
 
         file := fopen(file_name, "r")
-        if not file
-            return -1
+        if not file then return -1
         defer fclose(file)
 
         read_size, total_size := 0
@@ -73,8 +66,7 @@ class TcpSocket
         buf: char[READ_BUF_SIZE];
 
         file := fopen(file_name, "w")
-        if not file
-            return -1
+        if not file then return -1
         defer fclose(file)
 
         recv_len, total_size := 0
@@ -88,9 +80,9 @@ class TcpServer: TcpSocket
     int bindAndListen(port: int)
         memset(&servaddr,0,sizeof(servaddr))
         servaddr.sin_family = AF_INET
-        servaddr.sin_addr.s_addr=htonl(INADDR_ANY)
+        servaddr.sin_addr.s_addr = htonl(INADDR_ANY)
         servaddr.sin_port = htons(port)
-        if bind(sockfd, &servaddr as (sockaddr*), sizeof(servaddr)) != 0
+        if bind(sockfd, (sockaddr*)&servaddr, sizeof(servaddr)) != 0
             perror("bind failed\n")
             return -1
 
@@ -105,25 +97,25 @@ class TcpServer: TcpSocket
             connfd: int
             connaddr: sockaddr_in
             addrsz: socklen_t = sizeof(connaddr)
-            connfd = accept(sockfd, &connaddr as (sockaddr*), &addrsz)
+            connfd = accept(sockfd, (sockaddr*)&connaddr, &addrsz)
             if connfd == -1
                 perror("invalid connection\n")
                 continue;
             printf("new connection\n");
-            return TcpSocket(connfd,connaddr);
+            return TcpSocket(connfd,connaddr)
 
     TcpSocket getConn()
         loop
             connfd: int
             connaddr: sockaddr_in
             addrsz: socklen_t = sizeof(connaddr)
-            connfd = accept(sockfd, &connaddr as (sockaddr*), &addrsz)
+            connfd = accept(sockfd, (sockaddr*)&connaddr, &addrsz)
             if connfd == -1
                 perror("invalid connection\n")
                 continue
             if fork() == 0
                 //in child
                 printf("new connection\n")
-                return TcpSocket(connfd,connaddr);
+                return TcpSocket(connfd,connaddr)
             //else
             //in parent blocked in accept again!

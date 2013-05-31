@@ -110,7 +110,7 @@ class FtpServer
                     printf("PASSIVE mode: open port %d\n", tmpPort)
                     sprintf(cmd_buf, "227 Entering Passive Mode(127,0,0,1,%d,%d)\r\n", tmpPort>>8, tmpPort&0xFF)
                     ctrlSock.sendString(cmd_buf)
-                    passive = true;
+                    passive = true
 
                 when cmd_args[0] == "LIST"
                     tmpSocket := tmpServer->getConn()
@@ -152,7 +152,7 @@ class FtpServer
                         sprintf(cmd_buf,"150 Opening BINARY mode data connection for %s (%u bytes).\r\n",file_name,file_size)
                         ctrlSock.sendString(cmd_buf)
 
-                        tmpSocket := tmpServer->getOneConn();
+                        tmpSocket := tmpServer->getOneConn()
                         defer tmpSocket.close()
 
                         total_size := tmpSocket.sendFile(cmd_args[1].c_str())

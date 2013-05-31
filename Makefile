@@ -1,4 +1,4 @@
-SugarCpp = SugarCpp
+SugarCpp = SugarCpp -nocode
 CC = clang++
 CFLAGS= -std=c++11 -Wall -c
 
